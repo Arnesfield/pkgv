@@ -1,7 +1,7 @@
 // @ts-check
 import eslint from '@eslint/js';
-// @ts-expect-error: package has no type declarations
-import pluginChaiFriendly from 'eslint-plugin-chai-friendly';
+// // @ts-expect-error: package has no type declarations
+// import pluginChaiFriendly from 'eslint-plugin-chai-friendly';
 import { jsdoc } from 'eslint-plugin-jsdoc';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
@@ -59,20 +59,20 @@ export default defineConfig(
       // for imported types used only in jsdoc comments
       'jsdoc/no-undefined-types': ['warn', { disableReporting: true }]
     }
-  }),
-  {
-    // for tests only, override no-unused-expressions
-    files: ['**/*.spec.ts'],
-    plugins: { 'chai-friendly': pluginChaiFriendly },
-    rules: {
-      '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      'chai-friendly/no-unused-expressions': [
-        'warn',
-        { allowShortCircuit: true, allowTernary: true }
-      ],
-      'no-unused-expressions': 'off'
-    }
-  }
+  })
+  // {
+  //   // for tests only, override no-unused-expressions
+  //   files: ['**/*.spec.ts'],
+  //   plugins: { 'chai-friendly': pluginChaiFriendly },
+  //   rules: {
+  //     '@typescript-eslint/no-empty-function': 'off',
+  //     '@typescript-eslint/no-explicit-any': 'off',
+  //     '@typescript-eslint/no-unused-expressions': 'off',
+  //     'chai-friendly/no-unused-expressions': [
+  //       'warn',
+  //       { allowShortCircuit: true, allowTernary: true }
+  //     ],
+  //     'no-unused-expressions': 'off'
+  //   }
+  // }
 );
