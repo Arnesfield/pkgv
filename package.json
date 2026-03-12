@@ -1,33 +1,44 @@
 {
+  "name": "pkgv",
+  "version": "0.0.1-alpha.0",
+  "description": "",
+  "keywords": [
+    "pkgv",
+    "package",
+    "version",
+    "versions"
+  ],
+  "homepage": "https://github.com/Arnesfield/pkgv#readme",
+  "bugs": {
+    "url": "https://github.com/Arnesfield/pkgv/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arnesfield/pkgv.git"
+  },
+  "license": "MIT",
+  "author": "Jefferson Rylee <rylee.jeff385@gmail.com>",
   "sideEffects": false,
   "type": "module",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.cjs",
-      "default": "./lib/index.mjs"
+      "default": "./lib/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "lib/index.cjs",
-  "jsdelivr": "lib/index.umd.min.js",
-  "unpkg": "lib/index.umd.min.js",
-  "module": "lib/index.mjs",
-  "types": "lib/index.d.ts",
   "files": [
     "lib"
   ],
   "scripts": {
-    "all": "concurrently -r --kill-others-on-fail",
-    "build": "npm run all -- npm:bundle npm:check",
+    "build": "npm run check -- npm:bundle",
     "prebundle": "rimraf lib",
     "bundle": "rollup -c rollup.config.ts --configPlugin \"esbuild={target:'esnext'}\" --configImportAttributesKey with",
-    "check": "npm run all -- \"npm:lint -- --max-warnings 0\" tsc",
+    "check": "concurrently -r --kill-others-on-fail tsc \"npm:lint -- --max-warnings 0\"",
     "format": "npm run lint -- --fix && prettier -cw .",
     "lint": "eslint .",
     "start": "npm run watch -- --environment NODE_ENV:development",
-    "test": "npm run all -- mocha npm:check",
+    "test": "npm run check -- mocha",
     "test:watch": "mocha -w",
     "watch": "npm run bundle -- -w --no-watch.clearScreen"
   }
