@@ -5,6 +5,7 @@ function help(): never {
   console.log(
     `Options
   -n, --dry-run  dry run
+  -k, --keep     keep the same version
   -p, --prefix   set the version prefix`
   );
   process.exit(0);
@@ -54,12 +55,13 @@ async function loadPackageJson(filePath: string) {
 
 interface ParsedArgs {
   dryRun: boolean;
+  keep: boolean;
   prefix?: string | null;
   paths: string[];
 }
 
 function parseArgs(argv: string[]): ParsedArgs {
-  const parsed: ParsedArgs = { dryRun: false, paths: [] };
+  const parsed: ParsedArgs = { dryRun: false, keep: false, paths: [] };
 
   for (let i = 2; i < argv.length; i++) {
     const arg = argv[i];
@@ -73,6 +75,17 @@ function parseArgs(argv: string[]): ParsedArgs {
       case '-n':
       case '--dry-run':
         parsed.dryRun = true;
+        break;
+      case '--no-dry-run':
+        parsed.dryRun = false;
+        break;
+
+      case '-k':
+      case '--keep':
+        parsed.keep = true;
+        break;
+      case '--no-keep':
+        parsed.keep = false;
         break;
 
       case '-p':
@@ -140,12 +153,16 @@ function parseArgs(argv: string[]): ParsedArgs {
         ) {
           // NOTE: only handle ^ and ~ for now
           const currentVersion = dependencies[packageJson.name];
+          const hasPrefix =
+            currentVersion.startsWith('^') || currentVersion.startsWith('~');
           const prefix =
-            parsed.prefix ??
-            (currentVersion.startsWith('^') || currentVersion.startsWith('~')
-              ? currentVersion.slice(0, 1)
-              : '');
-          const newVersion = prefix + packageJson.version;
+            parsed.prefix ?? (hasPrefix ? currentVersion.slice(0, 1) : '');
+          const versionNumber = !parsed.keep
+            ? packageJson.version
+            : hasPrefix
+              ? currentVersion.slice(1)
+              : currentVersion;
+          const newVersion = prefix + versionNumber;
           const changed = currentVersion !== newVersion;
 
           if (changed) {
